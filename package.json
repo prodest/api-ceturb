@@ -1,0 +1,33 @@
+{
+  "name": "base-nodejs-api",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "start": "node src/bin/www"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alvarollmenezes/base-nodejs-api.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/alvarollmenezes/base-nodejs-api/issues"
+  },
+  "homepage": "https://github.com/alvarollmenezes/base-nodejs-api#readme",
+  "dependencies": {
+    "apicache": "0.0.14",
+    "bluebird": "^3.4.1",
+    "compression": "^1.6.2",
+    "cors": "^2.7.1",
+    "debug": "^2.2.0",
+    "express": "^4.14.0",
+    "lodash": "^4.14.1",
+    "newrelic": "^1.28.1",
+    "request": "^2.74.0",
+    "request-promise": "^4.1.0"
+  },
+  "devDependencies": {
+    "eslint-config-prodest": "^1.0.12"
+  }
+}
