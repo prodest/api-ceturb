@@ -4,7 +4,7 @@ module.exports = app => {
 
     const routeController = require( '../controllers/routeController' )();
 
-    app.get( '/route/:line', /*apicache( '10 minutes' ),*/ routeController.getList );
+    app.get( '/route/:line', apicache( '10 minutes' ), routeController.getList );
 
     return app;
 };
