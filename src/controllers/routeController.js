@@ -55,7 +55,7 @@ module.exports = () => {
 
             let grouped = groupByLine( data );
 
-            return res.json( grouped );
+            return res.json( grouped[ 0 ] );
         } )
         .catch( err => {
             throw err;
