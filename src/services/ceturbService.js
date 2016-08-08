@@ -43,5 +43,17 @@ module.exports = () => {
         return request( options );
     };
 
+    ceturbService.getNotes = function( line ) {
+        const options = {
+            uri: `${ceturb.notesEndpoint}/${line}`,
+            headers: {
+                'User-Agent': 'Request-Promise'
+            },
+            json: true
+        };
+
+        return request( options );
+    };
+
     return ceturbService;
 };

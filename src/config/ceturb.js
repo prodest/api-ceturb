@@ -4,5 +4,6 @@ module.exports = {
     api: ceturbApi,
     linesEndpoint: `${ceturbApi}/ConsultaLinha`,
     routesEndpoint: `${ceturbApi}/BuscaItinerarios`,
-    schedulesEndpoint: `${ceturbApi}/BuscaHorarios`
+    schedulesEndpoint: `${ceturbApi}/BuscaHorarios`,
+    notesEndpoint: `${ceturbApi}/BuscaHorarioObse`
 };
