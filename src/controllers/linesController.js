@@ -5,7 +5,7 @@ const _ = require( 'lodash' );
 module.exports = () => {
     var linesController = new Object();
 
-    linesController.getList = ( req, res ) => {
+    linesController.getList = ( req, res, next ) => {
         return Promise.all( [
             ceturbService().getLines( 'T' ),
             ceturbService().getLines( 'S' )
@@ -15,7 +15,7 @@ module.exports = () => {
             .map( a => {
                 return {
                     number: a.Linha,
-                    name: a.Descricao
+                    name: a.Descricao.trim().toUpperCase()
                 };
             } );
 
@@ -24,6 +24,9 @@ module.exports = () => {
             } );
 
             return res.json( lines );
+        } )
+        .catch( err => {
+            next( err );
         } );
     };
 
