@@ -4,7 +4,7 @@ module.exports = app => {
 
     const linesController = require( '../controllers/linesController' )();
 
-    app.get( '/lines', apicache( '10 minutes' ), linesController.getList );
+    app.get( '/lines', apicache( '24 hours' ), linesController.getList );
 
     return app;
 };
