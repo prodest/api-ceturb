@@ -11,7 +11,7 @@ module.exports = () => {
             .map( ( list, key ) => {
                 return {
                     type: key,
-                    paths: list.map( a => a.description )
+                    paths: list.map( a => a.description.trim() )
                 };
             } )
             .value();
