@@ -47,6 +47,20 @@ module.exports = () => {
             .value();
     }
 
+    function includeNotes( groupedSchedule, line ) {
+        return ceturbService().getNotes( line )
+        .then( data => {
+            groupedSchedule.notes = data.map( a => {
+                return {
+                    type: a.Tipo_Orientacao,
+                    description: a.Descricao_Orientacao
+                };
+            } );
+
+            return groupedSchedule;
+        } );
+    }
+
     schedulesController.getList = ( req, res ) => {
         const line = req.params.line;
 
@@ -72,7 +86,10 @@ module.exports = () => {
 
             let grouped = groupByLine( data );
 
-            return res.json( grouped[ 0 ] );
+            return includeNotes( grouped[ 0 ], line );
+        } )
+        .then( result => {
+            return res.json( result );
         } );
     };
 
