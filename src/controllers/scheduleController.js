@@ -12,7 +12,8 @@ module.exports = () => {
                 return {
                     name: list[ 0 ].dayGroupName,
                     beginDate: list[ 0 ].beginDate,
-                    schedule: list.map( a => ( a.time + a.direction ).trim() )
+                    schedule: list.sort( ( a, b ) => a.time.localeCompare( b.time ) )
+                                  .map( a => ( a.time + a.direction ).trim() )
                 };
             } )
             .value();
