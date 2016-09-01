@@ -4,6 +4,14 @@ const _ = require( 'lodash' );
 module.exports = () => {
     var routesController = new Object();
 
+    function notFound( next ) {
+        let error = new Error('Rota não encontrada.');
+        error.status = 404;
+        error.handled = true;
+        error.userMessage = error.message;
+        next( error );
+    }
+
     function groupByDirection( list ) {
         const grouped = _
             .chain( list )
@@ -35,11 +43,15 @@ module.exports = () => {
             .value();
     }
 
-    routesController.getList = ( req, res ) => {
+    routesController.getList = ( req, res, next ) => {
         const line = req.params.line;
 
         return ceturbService().getRoutes( line )
         .then( data => {
+            if ( data.length == 0 ){
+                return notFound( next );
+            }
+
             data.sort( ( a, b ) => {
                 return a.Sequencia - b.Sequencia;
             } );
@@ -58,7 +70,7 @@ module.exports = () => {
             return res.json( grouped[ 0 ] );
         } )
         .catch( err => {
-            throw err;
+            next( err );
         } );
     };
 

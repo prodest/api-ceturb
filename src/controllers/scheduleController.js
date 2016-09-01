@@ -4,6 +4,14 @@ const _ = require( 'lodash' );
 module.exports = () => {
     var schedulesController = new Object();
 
+    function notFound( next ) {
+        let error = new Error('Horários não encontrados.');
+        error.status = 404;
+        error.handled = true;
+        error.userMessage = error.message;
+        next( error );
+    }
+
     function groupByDayGroup( list ) {
         return _
             .chain( list )
@@ -62,11 +70,15 @@ module.exports = () => {
         } );
     }
 
-    schedulesController.getList = ( req, res ) => {
+    schedulesController.getList = ( req, res, next ) => {
         const line = req.params.line;
 
         return ceturbService().getSchedules( line )
         .then( data => {
+            if ( data.length == 0 ){
+                return notFound( next );
+            }
+
             data.sort( ( a, b ) => {
                 return a.Terminal_Seq - b.Terminal_Seq;
             } );
@@ -91,6 +103,9 @@ module.exports = () => {
         } )
         .then( result => {
             return res.json( result );
+        } )
+        .catch( err => {
+            next( err );
         } );
     };
 
