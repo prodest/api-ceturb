@@ -5,7 +5,7 @@ const buscaBusConfig = require( '../config/buscabus' );
 
 module.exports = app => {
 
-    app.use( '/buscabus/*', ( req, res, next ) => {
+    app.use( '/buscabus/*', apicache( '30 seconds'), ( req, res, next ) => {
         const apiPath = req.originalUrl.replace( `${appConfig.path}/buscabus/`, '' );
         const auth = "Basic " + new Buffer( buscaBusConfig.user + ":" + buscaBusConfig.password ).toString( 'base64' );
 
