@@ -5,13 +5,21 @@ if ( config.env === 'production' ) {
 }
 
 const express = require( 'express' );
+const bodyParser = require( 'body-parser' );
 const apiMiddleware = require( 'node-mw-api-prodest' ).middleware;
 
 let app = express();
 
+app.use(bodyParser.json());
+
 app.use( apiMiddleware( {
     compress: true,
-    cors: true,
+    cors: true
+}) );
+
+require( './routes/buscabus' )( app );
+
+app.use( apiMiddleware( {
     authentication: {
         jwtPublicKey: config.jwtPublicKey
     }
