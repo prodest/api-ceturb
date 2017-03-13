@@ -4,14 +4,6 @@ const _ = require( 'lodash' );
 module.exports = () => {
     var routesController = new Object();
 
-    function notFound( next ) {
-        let error = new Error('Rota não encontrada.');
-        error.status = 404;
-        error.handled = true;
-        error.userMessage = error.message;
-        next( error );
-    }
-
     function groupByDirection( list ) {
         const grouped = _
             .chain( list )
@@ -47,31 +39,31 @@ module.exports = () => {
         const line = req.params.line;
 
         return ceturbService().getRoutes( line )
-        .then( data => {
-            if ( data.length == 0 ){
-                return notFound( next );
-            }
+            .then( data => {
+                if ( data.length == 0 ) {
+                    return res.json( undefined );
+                }
 
-            data.sort( ( a, b ) => {
-                return a.Sequencia - b.Sequencia;
+                data.sort( ( a, b ) => {
+                    return a.Sequencia - b.Sequencia;
+                } );
+
+                data = data.map( a => {
+                    return {
+                        number: a.Linha,
+                        name: a.Descricao_Linha,
+                        direction: a.Sentido == 'I' ? 'Ida' : 'Volta',
+                        description: a.Desc_Via
+                    };
+                } );
+
+                let grouped = groupByLine( data );
+
+                return res.json( grouped[ 0 ] );
+            } )
+            .catch( err => {
+                next( err );
             } );
-
-            data = data.map( a => {
-                return {
-                    number: a.Linha,
-                    name: a.Descricao_Linha,
-                    direction: a.Sentido == 'I' ? 'Ida' : 'Volta',
-                    description: a.Desc_Via
-                };
-            } );
-
-            let grouped = groupByLine( data );
-
-            return res.json( grouped[ 0 ] );
-        } )
-        .catch( err => {
-            next( err );
-        } );
     };
 
     return routesController;
