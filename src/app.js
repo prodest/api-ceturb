@@ -10,20 +10,14 @@ const apiMiddleware = require( 'node-mw-api-prodest' ).middleware;
 
 let app = express();
 
-app.use(bodyParser.json());
+app.use( bodyParser.json() );
 
 app.use( apiMiddleware( {
     compress: true,
     cors: true
-}) );
+} ) );
 
 require( './routes/buscabus' )( app );
-
-app.use( apiMiddleware( {
-    authentication: {
-        jwtPublicKey: config.jwtPublicKey
-    }
-}) );
 
 // load our routes
 require( './routes/lines' )( app );
@@ -35,7 +29,7 @@ app.use( apiMiddleware( {
         notFound: true,
         debug: config.env === 'development'
     }
-}) );
+} ) );
 
 let pathApp = express();
 
