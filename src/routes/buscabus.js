@@ -1,7 +1,5 @@
 const apicache = require( 'apicache' ).options( { debug: false, appendKey: [ 'bodyRaw' ] } ).middleware;
-const request = require( 'request-promise' );
-const appConfig = require( '../config/app' );
-const buscaBusConfig = require( '../config/buscabus' );
+const buscaBusController = require( '../controllers/buscaBusController' )();
 
 module.exports = app => {
 
@@ -12,32 +10,17 @@ module.exports = app => {
         next();
     } );
 
-    app.use( '/buscabus/svc/json/db/pesquisarPontosDeParada', apicache( '6 hours' ), proxyBuscabus );
-    app.use( '/buscabus/svc/json/db/listarPontosDeParada', apicache( '6 hours' ), proxyBuscabus );
-    app.use( '/buscabus/svc/json/db/pesquisarPontosDeParada', apicache( '6 hours' ), proxyBuscabus );
-    app.use( '/buscabus/svc/json/db/listarItinerarios', apicache( '6 hours' ), proxyBuscabus );
+    app.use( '/transcolOnline/svc/json/db/pesquisarPontosDeParada', apicache( '6 hours' ), buscaBusController.proxyBuscabus );
+    app.use( '/transcolOnline/svc/json/db/pesquisarPontosDeParada', apicache( '6 hours' ), buscaBusController.proxyBuscabus );
+    app.use( '/transcolOnline/svc/json/db/listarItinerarios', apicache( '6 hours' ), buscaBusController.proxyBuscabus );
 
-    app.use( '/buscabus/*', apicache( '30 seconds' ), proxyBuscabus );
+    app.use( '/transcolOnline/svc/json/db/listarPontosDeParada', apicache( '6 hours' ), buscaBusController.obterPontosParada );
 
-    function proxyBuscabus( req, res, next ) {
-        const apiPath = req.originalUrl.replace( `${appConfig.path}/buscabus/`, '' );
-        const auth = 'Basic ' + new Buffer( buscaBusConfig.user + ':' + buscaBusConfig.password ).toString( 'base64' );
+    app.use( '/transcolOnline/svc/estimativas/obterEstimativasPorOrigemELinha', apicache( '30 seconds' ), buscaBusController.obterPrevisao );
+    app.use( '/transcolOnline/svc/estimativas/obterEstimativasPorOrigemEDestino', apicache( '30 seconds' ), buscaBusController.obterPrevisao );
 
-        const options = {
-            method: 'POST',
-            uri: `${buscaBusConfig.api}/${apiPath}`,
-            headers: {
-                'User-Agent': 'PRODEST-api-gateway',
-                'Authorization': auth,
-                'Content-Type': 'application/json'
-            },
-            body: req.body,
-            json: true
-        };
+    app.use( '/transcolOnline/svc/estimativas/obterEstimativasPorOrigem', apicache( '30 seconds' ), buscaBusController.obterPrevisaoAgrupada );
 
-        request( options )
-            .then( data => res.json( data ) )
-            .catch( err => next( err ) );
-    }
+    app.use( '/transcolOnline/*', apicache( '30 seconds' ), buscaBusController.proxyBuscabus );
 
 };
