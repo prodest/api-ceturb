@@ -102,9 +102,7 @@ module.exports = () => {
 
     buscaBusController.obterPontosParada = ( req, res, next ) => {
         return requestBuscabus( req )
-            .then( data => {
-                return res.json( formatBusStops( data ) );
-            } )
+            .then( data => data && data.pontosDeParada ? res.json( formatBusStops( data.pontosDeParada ) ) : res.json( [] ) )
             .catch( err => next( err ) );
     };
 
