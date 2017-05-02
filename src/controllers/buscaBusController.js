@@ -28,7 +28,7 @@ module.exports = () => {
 
     const listItinerariesByIds = ( ids ) => {
         const auth = 'Basic ' + new Buffer( buscaBusConfig.user + ':' + buscaBusConfig.password ).toString( 'base64' );
-        const uri = `http://localhost:${appConfig.port}${appConfig.path}/buscabus/svc/json/db/listarItinerarios`;
+        const uri = `http://localhost:${appConfig.port}${appConfig.path}/transcolOnline/svc/json/db/listarItinerarios`;
 
         const options = {
             method: 'POST',
@@ -109,7 +109,7 @@ module.exports = () => {
     };
 
     buscaBusController.obterPrevisao = ( req, res, next ) => {
-        requestBuscabus( req )
+        return requestBuscabus( req )
             .then( ( { horarioDoServidor, estimativas, pontoDeOrigemId, pontoDeDestinoId } ) => {
                 const previsions = _.chain( estimativas ).sortBy( 'horarioNaOrigem' ).value();
                 const itinerariesIds = previsions.map( e => e.itinerarioId );
@@ -128,7 +128,7 @@ module.exports = () => {
     };
 
     buscaBusController.obterPrevisaoAgrupada = ( req, res, next ) => {
-        requestBuscabus( req )
+        return requestBuscabus( req )
             .then( ( { horarioDoServidor, estimativas, pontoDeOrigemId, pontoDeDestinoId } ) => {
 
                 const previsions = _.chain( estimativas )
