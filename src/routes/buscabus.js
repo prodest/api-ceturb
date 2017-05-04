@@ -11,7 +11,6 @@ module.exports = app => {
     } );
 
     app.use( '/transcolOnline/svc/json/db/pesquisarPontosDeParada', apicache( '6 hours' ), buscaBusController.proxyBuscabus );
-    app.use( '/transcolOnline/svc/json/db/pesquisarPontosDeParada', apicache( '6 hours' ), buscaBusController.proxyBuscabus );
     app.use( '/transcolOnline/svc/json/db/listarItinerarios', apicache( '6 hours' ), buscaBusController.proxyBuscabus );
 
     app.use( '/transcolOnline/svc/json/db/listarPontosDeParada', apicache( '6 hours' ), buscaBusController.obterPontosParada );
