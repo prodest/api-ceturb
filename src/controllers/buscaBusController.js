@@ -1,8 +1,10 @@
 const _ = require( 'lodash' );
 const buscaBusConfig = require( '../config/buscabus' );
 const appConfig = require( '../config/app' );
-const moment = require( 'moment' );
+const moment = require( 'moment-timezone' );
 const request = require( 'request-promise' );
+
+moment.tz.setDefault( appConfig.TZ );
 
 module.exports = () => {
     var buscaBusController = new Object();
@@ -80,7 +82,7 @@ module.exports = () => {
             previsaoNoDestinoEmMinutos: destinationHours.previsaoEmMinutos,
             confiabilidade: reliability <= 7 ? 'green'
                 : reliability < 22 ? 'orange'
-                    : reliability < 30 ? 'darkred'
+                    : reliability < 36 ? 'darkred'
                         : 'grey'
         } );
     };
