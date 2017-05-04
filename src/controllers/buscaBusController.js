@@ -7,7 +7,7 @@ const request = require( 'request-promise' );
 moment.tz.setDefault( appConfig.TZ );
 
 module.exports = () => {
-    var buscaBusController = new Object();
+    const buscaBusController = new Object();
 
     const requestBuscabus = ( req ) => {
         const apiPath = req.originalUrl.replace( `${appConfig.path}/transcolOnline/`, '' );
@@ -54,14 +54,30 @@ module.exports = () => {
         return {
             previsaoEmMinutos,
             previsao,
-            horario// : `${ timePrefix } ${ previsao }`
+            horario
         };
+    };
+
+    const confiabilidade = ( horarioDaTransmissao, horarioDoServidor ) => {
+        const minutosAmarelo = 22 * 60 * 1000;
+        const minutosVerde = 7 * 60 * 1000;
+
+        const distancia = horarioDaTransmissao ? horarioDoServidor - horarioDaTransmissao : -1;
+
+        if ( distancia < 0 ) {
+            return 'grey';
+        }
+        if ( distancia > minutosAmarelo ) {
+            return 'darkred';
+        }
+        if ( distancia > minutosVerde ) {
+            return 'orange';
+        }
+        return 'green';
     };
 
     const createFullPrevision = ( prevision, itinerary, horarioDoServidor, pontoDeOrigemId, pontoDeDestinoId ) => {
         const serverHour = moment( horarioDoServidor );
-        const lastUpdateHour = moment( prevision.horarioDaTransmissao || 0 );
-        const reliability = lastUpdateHour.diff( serverHour, 'minutes' );
 
         const originHours = getPrevisionHours( moment( prevision.horarioNaOrigem ), serverHour );
         const destinationHours = getPrevisionHours( moment( prevision.horarioNoDestino ), serverHour );
@@ -80,10 +96,7 @@ module.exports = () => {
             horarioNoDestino: destinationHours.horario,
             previsaoNoDestino: destinationHours.previsao,
             previsaoNoDestinoEmMinutos: destinationHours.previsaoEmMinutos,
-            confiabilidade: reliability <= 7 ? 'green'
-                : reliability < 22 ? 'orange'
-                    : reliability < 36 ? 'darkred'
-                        : 'grey'
+            confiabilidade: confiabilidade( prevision.horarioDaTransmissao, horarioDoServidor )
         } );
     };
 
