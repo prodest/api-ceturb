@@ -59,8 +59,8 @@ module.exports = () => {
     };
 
     const confiabilidade = ( horarioDaTransmissao, horarioDoServidor ) => {
-        const minutosAmarelo = 22 * 60 * 1000;
-        const minutosVerde = 7 * 60 * 1000;
+        const minutosAmarelo = 16 * 60 * 1000;
+        const minutosVerde = 5 * 60 * 1000;
 
         const distancia = horarioDaTransmissao ? horarioDoServidor - horarioDaTransmissao : -1;
 
