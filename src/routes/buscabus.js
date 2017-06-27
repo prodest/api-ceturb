@@ -10,16 +10,16 @@ module.exports = app => {
         next();
     } );
 
-    app.use( '/transcolOnline/svc/json/db/pesquisarPontosDeParada', apicache( '6 hours' ), buscaBusController.proxyBuscabus );
-    app.use( '/transcolOnline/svc/json/db/listarItinerarios', apicache( '6 hours' ), buscaBusController.proxyBuscabus );
+    app.use( '/transcolOnline/svc/json/db/pesquisarPontosDeParada', apicache( '3 hours' ), buscaBusController.proxyBuscabus );
+    app.use( '/transcolOnline/svc/json/db/listarItinerarios', apicache( '3 hours' ), buscaBusController.proxyBuscabus );
 
-    app.use( '/transcolOnline/svc/json/db/listarPontosDeParada', apicache( '6 hours' ), buscaBusController.obterPontosParada );
+    app.use( '/transcolOnline/svc/json/db/listarPontosDeParada', apicache( '3 hours' ), buscaBusController.obterPontosParada );
 
-    app.use( '/transcolOnline/svc/estimativas/obterEstimativasPorOrigemELinha', apicache( '30 seconds' ), buscaBusController.obterPrevisao );
-    app.use( '/transcolOnline/svc/estimativas/obterEstimativasPorOrigemEDestino', apicache( '30 seconds' ), buscaBusController.obterPrevisao );
+    app.use( '/transcolOnline/svc/estimativas/obterEstimativasPorOrigemELinha', apicache( '10 seconds' ), buscaBusController.obterPrevisao );
+    app.use( '/transcolOnline/svc/estimativas/obterEstimativasPorOrigemEDestino', apicache( '10 seconds' ), buscaBusController.obterPrevisao );
 
-    app.use( '/transcolOnline/svc/estimativas/obterEstimativasPorOrigem', apicache( '30 seconds' ), buscaBusController.obterPrevisaoAgrupada );
+    app.use( '/transcolOnline/svc/estimativas/obterEstimativasPorOrigem', apicache( '10 seconds' ), buscaBusController.obterPrevisaoAgrupada );
 
-    app.use( '/transcolOnline/*', apicache( '30 seconds' ), buscaBusController.proxyBuscabus );
+    app.use( '/transcolOnline/*', apicache( '10 seconds' ), buscaBusController.proxyBuscabus );
 
 };
