@@ -44,7 +44,8 @@ module.exports = app => {
     } );
 
     app.get( '/transcolOnline/clearCache', ensureAuthenticated, ( req, res ) => {
-        return res.json( apicache.clear( 'transcolOnline' ) );
+        apicache.clear( 'transcolOnline' )
+        return res.send( 'Cache limpo com sucesso!' );
     } );
     
     app.get( '/transcolOnline/cache', ensureAuthenticated, ( req, res ) => {
