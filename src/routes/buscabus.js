@@ -5,7 +5,15 @@ const buscaBusController = require( '../controllers/buscaBusController' )();
 const appConfig = require( '../config/app' );
 
 const client = redis.createClient( { url: appConfig.redisURL } );
-const cache = apicache.options( { redisClient: client, debug: false, appendKey: [ 'bodyRaw' ] } ).middleware;
+const cache = apicache.options( 
+    { 
+        redisClient: client,
+        debug: false,
+        appendKey: [ 'bodyRaw' ],
+        statusCodes: {
+            include: [ 200 ]
+        }
+    } ).middleware;
 
 // Simple route middleware to ensure user is authenticated.
 //   Use this route middleware on any resource that needs to be protected.  If
