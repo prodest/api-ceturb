@@ -125,7 +125,11 @@ module.exports = () => {
     buscaBusController.obterPrevisao = ( req, res, next ) => {
         return requestBuscabus( req )
             .then( ( { horarioDoServidor, estimativas, pontoDeOrigemId, pontoDeDestinoId } ) => {
-                const previsions = _.chain( estimativas ).sortBy( 'horarioNaOrigem' ).value();
+                const previsions = _.chain( estimativas )
+                    .filter( p => p.pontoFinal !== true )
+                    .sortBy( 'horarioNaOrigem' )
+                    .value();
+
                 const itinerariesIds = previsions.map( e => e.itinerarioId );
 
                 return listItinerariesByIds( itinerariesIds )
@@ -146,6 +150,7 @@ module.exports = () => {
             .then( ( { horarioDoServidor, estimativas, pontoDeOrigemId, pontoDeDestinoId } ) => {
 
                 const previsions = _.chain( estimativas )
+                    .filter( p => p.pontoFinal !== true )
                     .sortBy( 'horarioNaOrigem' )
                     .groupBy( 'itinerarioId' )
                     .valuesIn()
