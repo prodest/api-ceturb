@@ -1,5 +1,7 @@
 require: sudo
 language: node_js
+node_js:
+  - 6
 services:
   - docker
 env:
