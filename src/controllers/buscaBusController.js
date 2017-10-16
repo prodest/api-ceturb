@@ -116,12 +116,16 @@ module.exports = () => {
         } );
     };
 
-    const applicationFilters = ( horarioDoServidor, prevision ) => {
-        const serverHour = moment( horarioDoServidor );
-        const originHours = moment( prevision.horarioNaOrigem );
-        const minutes = originHours.diff( serverHour, 'minutes' );
+    const applicationFilters = ( horarioDoServidor, prevision, filterMinutes = true ) => {
+        if ( filterMinutes ) {
+            const serverHour = moment( horarioDoServidor );
+            const originHours = moment( prevision.horarioNaOrigem );
+            const minutes = originHours.diff( serverHour, 'minutes' );
 
-        return !prevision.pontoFinal && minutes < 120;
+            return !prevision.pontoFinal && minutes < 120;
+        }
+
+        return !prevision.pontoFinal;
     };
 
     buscaBusController.obterPontosParada = ( req, res, next ) => {
@@ -158,7 +162,7 @@ module.exports = () => {
             .then( ( { horarioDoServidor, estimativas, pontoDeOrigemId, pontoDeDestinoId } ) => {
 
                 const previsions = _.chain( estimativas )
-                    .filter( p => applicationFilters( horarioDoServidor, p ) )
+                    .filter( p => applicationFilters( horarioDoServidor, p, false ) )
                     .sortBy( 'horarioNaOrigem' )
                     .groupBy( 'itinerarioId' )
                     .valuesIn()
