@@ -6,6 +6,8 @@ const request = require( 'request-promise' );
 
 moment.tz.setDefault( appConfig.TZ );
 
+const MINUTES_LIMIT = 120;
+
 module.exports = () => {
     const buscaBusController = new Object();
 
@@ -116,16 +118,12 @@ module.exports = () => {
         } );
     };
 
-    const applicationFilters = ( horarioDoServidor, prevision, filterMinutes = true ) => {
-        if ( filterMinutes ) {
-            const serverHour = moment( horarioDoServidor );
-            const originHours = moment( prevision.horarioNaOrigem );
-            const minutes = originHours.diff( serverHour, 'minutes' );
+    const beforeDefinedMinutes = ( serverTime, prevision, minutes = MINUTES_LIMIT ) => {
+        const serverHour = moment( serverTime );
+        const originHours = moment( prevision.horarioNaOrigem );
+        const minutesDiff = originHours.diff( serverHour, 'minutes' );
 
-            return !prevision.pontoFinal && minutes < 120;
-        }
-
-        return !prevision.pontoFinal;
+        return minutesDiff < minutes;
     };
 
     buscaBusController.obterPontosParada = ( req, res, next ) => {
@@ -134,13 +132,25 @@ module.exports = () => {
             .catch( err => next( err ) );
     };
 
+    const getFilteredPrevisions = ( previsions, serverTime ) => {
+        const sortedPrevisions = _.chain( previsions )
+                                    .filter( p => !p.pontoFinal )
+                                    .sortBy( 'horarioNaOrigem' )
+                                    .value();
+
+        const firstPrevision = sortedPrevisions[ 0 ];
+
+        if ( !beforeDefinedMinutes( serverTime, firstPrevision ) ) {
+            return [ firstPrevision ];
+        } else {
+            return _.filter( sortedPrevisions, p => beforeDefinedMinutes( serverTime, p ) );
+        }
+    };
+
     buscaBusController.obterPrevisao = ( req, res, next ) => {
         return requestBuscabus( req )
             .then( ( { horarioDoServidor, estimativas, pontoDeOrigemId, pontoDeDestinoId } ) => {
-                const previsions = _.chain( estimativas )
-                    .filter( p => applicationFilters( horarioDoServidor, p ) )
-                    .sortBy( 'horarioNaOrigem' )
-                    .value();
+                const previsions = getFilteredPrevisions( estimativas, horarioDoServidor );
 
                 const itinerariesIds = previsions.map( e => e.itinerarioId );
 
@@ -162,7 +172,7 @@ module.exports = () => {
             .then( ( { horarioDoServidor, estimativas, pontoDeOrigemId, pontoDeDestinoId } ) => {
 
                 const previsions = _.chain( estimativas )
-                    .filter( p => applicationFilters( horarioDoServidor, p, false ) )
+                    .filter( p => !p.pontoFinal )
                     .sortBy( 'horarioNaOrigem' )
                     .groupBy( 'itinerarioId' )
                     .valuesIn()
