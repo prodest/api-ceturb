@@ -21,6 +21,7 @@ require( './routes/buscabus' )( app );
 
 // Todos os erros do transcol online devem retornar uma mensagem padrão para o usuário
 app.use( ( err, req, res, next ) => {
+    err.handled = true;
     err.userMessage = 'Sistema indisponível.';
     next( err );
 } );
