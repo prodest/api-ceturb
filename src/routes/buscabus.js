@@ -1,4 +1,11 @@
-const apicache = require( 'apicache' ).options( { debug: false, appendKey: [ 'bodyRaw' ] } ).middleware;
+const apicache = require( 'apicache' ).options( 
+    {
+        debug: false,
+        appendKey: [ 'bodyRaw' ],
+        statusCodes: {
+            include: [ 200 ]
+        }
+    } ).middleware;
 const buscaBusController = require( '../controllers/buscaBusController' )();
 
 module.exports = app => {
