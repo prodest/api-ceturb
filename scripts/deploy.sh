@@ -1,11 +1,10 @@
 #!/bin/bash
 set -e
 
-export RANCHER_START_FIRST=true
-
 export RANCHER_ENV=$1
 export RANCHER_STACK=$2
-export DOCKER_TAG=$3
+export RANCHER_SERVICE=$3
+export RANCHER_START_FIRST=true
 
 docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
 docker push $DOCKER_IMAGE
