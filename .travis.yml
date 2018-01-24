@@ -1,4 +1,4 @@
-require: sudo
+dist: trusty
 language: node_js
 node_js:
   - 6
@@ -7,7 +7,7 @@ services:
 env:
   - DOCKER_IMAGE=prodest/api-ceturb:${TRAVIS_COMMIT:0:7}
 script: 
-  /bin/sh .travis.sh
+  - scripts/travis.sh
 deploy:
   provider: script
   skip_cleanup: true
