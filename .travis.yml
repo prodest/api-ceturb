@@ -5,7 +5,7 @@ node_js:
 services:
   - docker
 env:
-  - DOCKER_IMAGE=prodest/api-ceturb SERVICE_NAME=api-ceturb RANCHER_URL=http://cloud.datacenter.es.gov.br.local/v1/projects/1a4680 RANCHER_STACK=api RANCHER_COMPOSE_URL=http://cloud.datacenter.es.gov.br.local/v1/projects/1a4680/environments/1e56/composeconfig
+  - DOCKER_IMAGE=prodest/api-ceturb SERVICE_NAME=api-ceturb RANCHER_URL=http://rancher.dcpr.es.gov.br/v1/projects/1a2032 RANCHER_STACK=api RANCHER_COMPOSE_URL=http://rancher.dcpr.es.gov.br/v1/projects/1a2032/environments/1e101/composeconfig
 script: 
   /bin/sh .travis.sh
 deploy:
