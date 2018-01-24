@@ -141,7 +141,7 @@ module.exports = () => {
         if ( sortedPrevisions.length === 0 ) {
             return [];
         }
-        
+
         const firstPrevision = sortedPrevisions[ 0 ];
 
         if ( !beforeDefinedMinutes( serverTime, firstPrevision ) ) {

@@ -1,4 +1,4 @@
-const apicache = require( 'apicache' ).options( 
+const apicache = require( 'apicache' ).options(
     {
         debug: false,
         appendKey: [ 'bodyRaw' ],
