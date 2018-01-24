@@ -5,12 +5,12 @@ node_js:
 services:
   - docker
 env:
-  - DOCKER_IMAGE=prodest/api-ceturb SERVICE_NAME=api-ceturb RANCHER_URL=http://rancher.dcpr.es.gov.br/v1/projects/1a2032 RANCHER_STACK=api RANCHER_COMPOSE_URL=http://rancher.dcpr.es.gov.br/v1/projects/1a2032/environments/1e101/composeconfig
+  - DOCKER_IMAGE=prodest/api-ceturb:${TRAVIS_COMMIT:0:7}
 script: 
   /bin/sh .travis.sh
 deploy:
   provider: script
   skip_cleanup: true
-  script: /bin/sh .deploy.sh
+  script: scripts/deploy.sh api api
   on:
     branch: master
