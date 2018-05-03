@@ -16,7 +16,7 @@
   },
   "homepage": "https://github.com/alvarollmenezes/base-nodejs-api#readme",
   "dependencies": {
-    "apicache": "0.0.14",
+    "apicache": "^1.2.1",
     "bluebird": "^3.4.1",
     "body-parser": "^1.16.1",
     "compression": "^1.6.2",
