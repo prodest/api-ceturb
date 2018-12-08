@@ -1,0 +1,17 @@
+version: '2'
+
+services:
+  redis:
+    image: registry.es.gov.br/espm/apis/api-ceturb/redis     
+  api-ceturb:
+    image: registry.es.gov.br/espm/apis/api-ceturb:latest
+    environment:
+      - MINIO_ADDRESS=http://172.17.0.1:9000
+      - MINIO_SECRETKEY=admin123
+      - MINIO_KEY=admin
+      - REDIS_HOST=demo-redis
+      - REDIS_PORT=6379
+    ports:
+      - "3000:3000"
+    links:
+      - "redis:demo-redis"

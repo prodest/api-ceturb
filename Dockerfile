@@ -1,15 +1,14 @@
-FROM mhart/alpine-node:8.11
+FROM registry.es.gov.br/espm/dockers/node:8.12.0-alpine
 
-# add project to build
-COPY src /root/api/src
-COPY package.json /root/api/package.json
-COPY newrelic.js /root/api/newrelic.js
-WORKDIR /root/api
+RUN mkdir -p /usr/app/src
+WORKDIR /usr/app
 
-RUN npm install
+COPY package.json tsconfig.json /usr/app/
+RUN npm install --prod
+COPY src/ /usr/app/src
+COPY swagger.json /usr/app
+COPY mc /usr/app/
 
-ENV PORT 4242
+EXPOSE 3000
 
-EXPOSE 4242
-
-CMD ["node", "src/bin/www"]
+CMD ["npm","run", "start"]

@@ -1,0 +1,12 @@
+execution:
+- iterations: 5
+  concurrency: 2500
+  scenario: quick-test
+
+scenarios:
+  quick-test:
+    requests:
+    - http://ceturb.10.243.9.12.xip.io/pontos
+    - http://ceturb.10.243.9.12.xip.io/linha
+    - http://ceturb.10.243.9.12.xip.io/viagens
+    - http://ceturb.10.243.9.12.xip.io/itinerarios

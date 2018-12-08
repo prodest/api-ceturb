@@ -1,0 +1,12 @@
+execution:
+- iterations: 5
+  concurrency: 2500
+  scenario: quick-test
+
+scenarios:
+  quick-test:
+    requests:
+    - http://192.168.1.100:3000/pontos
+    - http://192.168.1.100:3000/linha
+    - http://192.168.1.100:3000/viagens
+    - http://192.168.1.100:3000/itinerarios

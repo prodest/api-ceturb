@@ -1,37 +1,106 @@
 {
-  "name": "base-nodejs-api",
-  "version": "1.0.0",
-  "description": "",
-  "scripts": {
-    "start": "node src/bin/www"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/alvarollmenezes/base-nodejs-api.git"
-  },
-  "author": "",
+  "name": "api-ceturb",
+  "version": "1.12.3",
+  "description": "API de acesso aos dados do transporte público do estado do Espírito Santo",
+  "author": "Prodest",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/alvarollmenezes/base-nodejs-api/issues"
+  "scripts": {
+    "format": "prettier --write \"**/*.ts\"",
+    "start": "ts-node -r tsconfig-paths/register src/main.ts",
+    "start:dev": "nodemon",
+    "prestart:prod": "rm -rf dist && tsc",
+    "start:prod": "node dist/main.js",
+    "start:hmr": "node dist/server",
+    "test": "jest",
+    "test:cov": "jest --coverage",
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "webpack": "webpack --config webpack.config.js",
+    "commit": "git-cz",
+    "custom-tests": "echo \"(No other custom tests yet.)\" && echo",
+    "release": "standard-version",
+    "redis": "docker run -d -p 6379:6379 redis",
+    "stopdocker": "docker stop $(docker ps -q -a) && docker rm $(docker ps -q -a)",
+    "minio": "docker run -d -p 9000:9000 -e MINIO_ACCESS_KEY=admin -e MINIO_SECRET_KEY=admin123 minio/minio server /data",
+    "commit:build": "git add . && npm run commit && npm run release && git push --tags origin dev",
+    "persistentdb": "docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=Senh@Dif1cil' -p 1433:1433 -v /home/mgarcia/DOCKER/mssql/:/var/opt/mssql --name sql-server-persistent -d microsoft/mssql-server-linux ",
+    "sqlserver": "docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=Senh@Dif1cil' -p 1433:1433 --name sql-server -d microsoft/mssql-server-linux ",
+    "connect": "sqlcmd -S localhost -U SA -PSenh@Dif1cil",
+    "sonar:casa": "sonar-scanner -Dsonar.projectKey=api-ceturb -Dsonar.language=ts -Dsonar.sources=src -Dsonar.host.url=http://localhost:9000 -Dsonar.login=8265f31535ef7c18d4d6abd951ffae41ee6b0b05",
+    "stress:casa": "docker run -i --network host --rm -v $(pwd)/stress:/bzt-configs -v $(pwd)/stress/artifacts:/tmp/artifacts registry.es.gov.br/espm/dockers/taurus:latest quick_test.local.yml 2>&1"
   },
-  "homepage": "https://github.com/alvarollmenezes/base-nodejs-api#readme",
   "dependencies": {
-    "apicache": "^1.2.1",
-    "bluebird": "^3.4.1",
-    "body-parser": "^1.16.1",
-    "compression": "^1.6.2",
-    "cors": "^2.7.1",
-    "debug": "^2.2.0",
-    "express": "^4.14.0",
-    "lodash": "^4.14.1",
-    "moment": "^2.18.1",
-    "moment-timezone": "^0.5.13",
-    "newrelic": "^1.28.1",
-    "node-mw-api-prodest": "^1.2.2",
-    "request": "^2.74.0",
-    "request-promise": "^4.1.0"
+    "@nestjs/common": "^5.0.0",
+    "@nestjs/core": "^5.0.0",
+    "@nestjs/swagger": "^2.2.0",
+    "@nestjs/typeorm": "^5.2.2",
+    "@types/apicache": "^1.2.0",
+    "@types/redis": "^2.8.6",
+    "@types/shelljs": "^0.8.0",
+    "apicache": "^1.2.3",
+    "fastify-formbody": "^2.0.0",
+    "jest-cucumber": "^1.0.7",
+    "mssql": "^4.2.1",
+    "redis": "^2.8.0",
+    "reflect-metadata": "^0.1.12",
+    "request-promise": "^4.2.2",
+    "rxjs": "^6.3.3",
+    "shelljs": "^0.8.2",
+    "typeorm": "^0.2.7",
+    "typescript": "^2.6.2",
+    "ts-node": "^4.1.0",
+    "tsconfig-paths": "^3.1.1"
   },
   "devDependencies": {
-    "eslint-config-prodest": "^1.0.12"
+    "@nestjs/testing": "^5.0.0",
+    "@types/express": "^4.0.39",
+    "@types/jest": "^21.1.8",
+    "@types/node": "^9.3.0",
+    "@types/request-promise": "^4.1.42",
+    "@types/supertest": "^2.0.4",
+    "commitizen": "^2.10.1",
+    "cz-conventional-changelog": "^2.1.0",
+    "husky": "^1.0.0-rc.13",
+    "jest": "^23.3.0",
+    "nodemon": "^1.14.1",
+    "prettier": "^1.11.1",
+    "standard-version": "^4.4.0",
+    "supertest": "^3.0.0",
+    "ts-jest": "^21.2.4",
+    "ts-loader": "^4.1.0",
+    "tslint": "5.3.2",
+    "validate-commit-msg": "^2.14.0",
+    "webpack": "^4.2.0",
+    "webpack-cli": "^2.0.13",
+    "webpack-node-externals": "^1.6.0"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "rootDir": "src",
+    "testRegex": ".spec.ts$",
+    "forceCoverageMatch": [
+      "**/*.spec.ts"
+    ],
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "coverageDirectory": "../coverage"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    },
+    "validate-commit-msg": {
+      "types": "conventional-commit-types",
+      "helpMessage": "Use \"npm run commit\" instead, we use conventional-changelog format :) (https://github.com/commitizen/cz-cli)"
+    }
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "validate-commit-msg"
+    }
   }
 }
